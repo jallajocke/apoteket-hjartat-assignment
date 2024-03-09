@@ -71,7 +71,10 @@ public class OrderController(
 		return NoContent();
 	}
 
-
+	/// <summary>
+	/// Gets an order
+	/// </summary>
+	/// <response code="200">Returns an order.</response>
 	[HttpGet("{orderId:guid}", Name = nameof(GetOrderAsync))]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Order))]
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetail))]
@@ -85,6 +88,10 @@ public class OrderController(
 		return Ok(order);
 	}
 
+	/// <summary>
+	/// Gets all orders
+	/// </summary>
+	/// <response code="200">Returns all orders.</response>
 	[HttpGet]
 	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Order>))]
 	public async Task<ActionResult<IEnumerable<Order>>> GetAllOrdersAsync()
