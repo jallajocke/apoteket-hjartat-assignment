@@ -10,12 +10,16 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class OrderController(ICreateOrderHandler createOrderHandler, IUpdateOrderHandler updateOrderHandler, IGetOrderHandler getOrderHandler, IGetAllOrdersHandler getAllOrdersHandler) : ControllerBase
+public class OrderController(
+	ICreateOrderHandler createOrderHandler,
+	IUpdateOrderHandler updateOrderHandler,
+	IGetOrderHandler getOrderHandler,
+	IGetAllOrdersHandler getAllOrdersHandler) : ControllerBase
 {
-	private readonly IGetOrderHandler _getOrderHandler = getOrderHandler;
-	private readonly IGetAllOrdersHandler _getAllOrdersHandler = getAllOrdersHandler;
 	private readonly ICreateOrderHandler _createOrderHandler = createOrderHandler;
 	private readonly IUpdateOrderHandler _updateOrderHandler = updateOrderHandler;
+	private readonly IGetOrderHandler _getOrderHandler = getOrderHandler;
+	private readonly IGetAllOrdersHandler _getAllOrdersHandler = getAllOrdersHandler;
 
 	/// <summary>
 	/// Creates a new order
