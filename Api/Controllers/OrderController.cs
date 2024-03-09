@@ -56,6 +56,8 @@ public class OrderController(
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetail))]
 	public async Task<ActionResult> UpdateOrderAsync([FromRoute] Guid orderId, [FromBody] UpdateOrderRequest request)
 	{
+		if (orderId == Guid.Empty) return BadRequest(new ErrorDetail { Message = "OrderId guid cannot be empty.", ErrorCode = 400 });
+
 		var command = new UpdateOrderCommand
 		{
 			OrderId = orderId,
@@ -75,6 +77,8 @@ public class OrderController(
 	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetail))]
 	public async Task<ActionResult<Order>> GetOrderAsync([FromRoute] Guid orderId)
 	{
+		if (orderId == Guid.Empty) return BadRequest(new ErrorDetail { Message = "OrderId guid cannot be empty.", ErrorCode = 400 });
+
 		var result = await _getOrderHandler.HandleAsync(orderId);
 		var order = OrderMapper.Map(result);
 
@@ -99,6 +103,8 @@ public class OrderController(
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	public async Task<ActionResult> DeleteOrderAsync([FromRoute] Guid orderId)
 	{
+		if (orderId == Guid.Empty) return BadRequest(new ErrorDetail { Message = "OrderId guid cannot be empty.", ErrorCode = 400 });
+
 		await _deleteOrderHandler.HandleAsync(orderId);
 
 		return NoContent();

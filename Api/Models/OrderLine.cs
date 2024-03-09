@@ -8,6 +8,7 @@ public class OrderLine()
 	/// The id of the product.
 	/// </summary>
 	[Required]
+	[RegularExpression("^((?!00000000-0000-0000-0000-000000000000).)*$", ErrorMessage = "ProductId cannot be empty.")]
 	public required Guid ProductId { get; set; }
 
 	/// <summary>
