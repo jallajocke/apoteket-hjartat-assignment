@@ -1,9 +1,18 @@
-﻿namespace Api.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Api.Models;
 
 public class Address
 {
-	public string Name { get; set; }
-	public string Street { get; set; }
-	public string ZipCode { get; set; }
-	public string City { get; set; }
+	[Required]
+	public required string Name { get; set; }
+
+	[Required]
+	public required string Street { get; set; }
+
+	[Required]
+	public required string ZipCode { get; set; }
+
+	[Required]
+	public required string City { get; set; }
 }

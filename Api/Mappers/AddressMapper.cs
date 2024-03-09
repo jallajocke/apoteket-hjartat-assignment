@@ -15,4 +15,15 @@ public class AddressMapper
 			ZipCode = address.ZipCode,
 		};
 	}
+
+	public static Address Map(ApiModels.Address address)
+	{
+		return new Address
+		{
+			Name = address.Name,
+			Street = address.Street,
+			City = address.City,
+			ZipCode = address.ZipCode,
+		};
+	}
 }

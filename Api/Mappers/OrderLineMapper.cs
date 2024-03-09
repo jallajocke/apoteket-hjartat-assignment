@@ -13,4 +13,9 @@ public class OrderLineMapper
 			Quantity = line.Quantity,
 		};
 	}
+
+	public static OrderLine Map(ApiModels.OrderLine line)
+	{
+		return new OrderLine(line.ProductId, line.Quantity);
+	}
 }
