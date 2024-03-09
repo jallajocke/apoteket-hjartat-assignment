@@ -27,4 +27,12 @@ public class OrderRepositoryScaffold : IOrderRepository
 	{
 		return _orders.Select(OrderMapper.Map).ToList();
 	}
+
+	public async Task<Order?> GetOrderAsync(Guid orderId)
+	{
+		var order = _orders.FirstOrDefault(o => o.OrderId == orderId);
+		if (order == null) return null;
+
+		return OrderMapper.Map(order);
+	}
 }

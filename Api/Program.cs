@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddTransient<IGetAllOrdersHandler, GetAllOrdersHandler>();
+builder.Services.AddTransient<IGetOrderHandler, GetOrderHandler>();
 
 builder.Services.AddSingleton<IOrderRepository, OrderRepositoryScaffold>();
 
