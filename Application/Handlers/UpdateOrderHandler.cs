@@ -1,5 +1,6 @@
 ﻿using Application.Commands;
 using Application.ExternalInterfaces;
+using Domain.ErrorHandling;
 
 namespace Application.Handlers;
 
@@ -14,6 +15,16 @@ public class UpdateOrderHandler(IOrderRepository orderRepository) : IUpdateOrder
 
 	public async Task HandleAsync(UpdateOrderCommand command)
 	{
-		throw new NotImplementedException();
+		var order = await _orderRepository.GetOrderAsync(command.OrderId);
+		if (order == null) throw new OrderNotFoundException(command.OrderId, $"Order not found in repository for id: '{command.OrderId}'.");
+
+		command.RemoveProductIds.ForEach(order.RemoveProducts);
+		command.AddOrderLines.ForEach(order.AddLine);
+		if (command.NewDeliveryAddress != null)
+		{
+			order.UpdateDeliveryAddress(command.NewDeliveryAddress);
+		}
+
+		await _orderRepository.UpdateOrderAsync(order);
 	}
 }

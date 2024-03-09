@@ -27,4 +27,20 @@ public class OrderRepositoryScaffold : IOrderRepository
 
 		return OrderMapper.Map(order);
 	}
+
+	public async Task UpdateOrderAsync(Order order)
+	{
+		await RemoveOrderAsync(order.OrderId);
+
+		_orders.Add(OrderMapper.Map(order));
+	}
+
+	public async Task RemoveOrderAsync(Guid orderId)
+	{
+		var order = _orders.SingleOrDefault(o => o.OrderId == orderId);
+		if (order != null)
+		{
+			_orders.Remove(order);
+		}
+	}
 }
