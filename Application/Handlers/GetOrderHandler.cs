@@ -1,4 +1,5 @@
 ﻿using Application.ExternalInterfaces;
+using Domain.ErrorHandling;
 using Domain.Models;
 
 namespace Application.Handlers;
@@ -15,7 +16,7 @@ public class GetOrderHandler(IOrderRepository orderRepository) : IGetOrderHandle
 	public async Task<Order> HandleAsync(Guid orderId)
 	{
 		var order = await _orderRepository.GetOrderAsync(orderId);
-		if (order == null) throw new Exception("Temporary");
+		if (order == null) throw new OrderNotFoundException(orderId, $"Order not found in repository for id: '{orderId}'.");
 
 		return order;
 	}

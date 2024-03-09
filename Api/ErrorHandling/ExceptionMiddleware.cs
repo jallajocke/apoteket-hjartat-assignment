@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Domain.ErrorHandling;
+using System.Text.Json;
 
 namespace Api.ErrorHandling;
 
@@ -36,6 +37,11 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
 	{
 		return exception switch
 		{
+			OrderNotFoundException error => new ErrorDetail
+			{
+				ErrorCode = 404,
+				Message = $"No order exists with id {error.OrderId}",
+			},
 			_ => new ErrorDetail
 			{
 				ErrorCode = 500,
