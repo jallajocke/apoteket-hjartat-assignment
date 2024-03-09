@@ -2,7 +2,7 @@
 
 public class Order(Guid customerId, Address deliveryAddress, Guid? orderId = null)
 {
-	public Guid OrderId { get; private set; } = orderId ?? Guid.NewGuid();
+	public Guid OrderId { get; private set; } = orderId != Guid.Empty ? orderId ?? Guid.NewGuid() : throw new ArgumentException("Guid cannot be empty.", nameof(orderId));
 
 	public readonly Guid CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentException("Guid cannot be empty.", nameof(customerId));
 
