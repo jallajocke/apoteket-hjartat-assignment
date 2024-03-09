@@ -1,9 +1,13 @@
+using Application.ExternalInterfaces;
 using Application.Handlers;
+using Infrastructure.OrderPersistance.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddTransient<IGetAllOrdersHandler, GetAllOrdersHandler>();
+
+builder.Services.AddSingleton<IOrderRepository, OrderRepositoryScaffold>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
