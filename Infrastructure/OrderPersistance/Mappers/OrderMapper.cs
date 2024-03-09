@@ -18,11 +18,8 @@ public static class OrderMapper
 
 	public static Order Map(Infra.Order infraOrder)
 	{
-		var order = new Order(infraOrder.OrderId)
-		{
-			CustomerId = infraOrder.CustomerId,
-			DeliveryAddress = AddressMapper.Map(infraOrder.DeliveryAddress),
-		};
+		var address = AddressMapper.Map(infraOrder.DeliveryAddress);
+		var order = new Order(infraOrder.CustomerId, address, infraOrder.OrderId);
 
 		infraOrder.OrderLines
 			.Select(OrderLineMapper.Map)

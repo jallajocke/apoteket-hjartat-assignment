@@ -15,12 +15,7 @@ public class CreateOrderHandler(IOrderRepository orderRepository) : ICreateOrder
 
 	public async Task<Order> HandleAsync(CreateOrderCommand command)
 	{
-		var order = new Order
-		{
-			CustomerId = command.CustomerId,
-			DeliveryAddress = command.DeliveryAddress,
-		};
-
+		var order = new Order(command.CustomerId, command.DeliveryAddress);
 		command.OrderLines.ForEach(order.AddLine);
 
 		await _orderRepository.CreateOrderAsync(order);

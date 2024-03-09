@@ -1,12 +1,12 @@
 ﻿namespace Domain.Models;
 
-public class Order(Guid? orderId = null)
+public class Order(Guid customerId, Address deliveryAddress, Guid? orderId = null)
 {
 	public Guid OrderId { get; private set; } = orderId ?? Guid.NewGuid();
 
-	public required Guid CustomerId { get; init; }
+	public readonly Guid CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentException("Guid cannot be empty.", nameof(customerId));
 
-	public required Address DeliveryAddress { get; init; }
+	public readonly Address DeliveryAddress = deliveryAddress ?? throw new ArgumentNullException(nameof(deliveryAddress));
 
 	// invariant: every line's ProductId is unique
 	private readonly List<OrderLine> _orderLines = [];
