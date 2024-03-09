@@ -81,6 +81,70 @@ public class OrderTests
 		Assert.Throws<ArgumentNullException>(() => new Order(customerId, address));
 	}
 
+
+	[Test]
+	public void AddLines_SingleLine_UpdatesOrderLines()
+	{
+		// Arrange
+		var order = GetEmptyOrder();
+		var productId = Guid.NewGuid();
+		var quantity = 5;
+		var line = new OrderLine(productId, quantity);
+
+		// Act
+		order.AddLine(line);
+
+		// Assert
+		Assert.That(order.OrderLines, Has.Count.EqualTo(1));
+		Assert.That(order.OrderLines[0], Is.EqualTo(line));
+	}
+
+	[Test]
+	public void AddLines_MultipleLines_UpdatesOrderLines()
+	{
+		// Arrange
+		var order = GetEmptyOrder();
+		var lines = new List<OrderLine>
+		{
+			new OrderLine(Guid.NewGuid(), 5),
+			new OrderLine(Guid.NewGuid(), 3),
+		};
+
+		// Act
+		lines.ForEach(order.AddLine);
+
+		// Assert
+		Assert.That(order.OrderLines, Has.Count.EqualTo(2));
+	}
+
+	[Test]
+	public void AddLines_MultipleLinesOfSameProductId_AddsOneLineWithSumOfQuantity()
+	{
+		// Arrange
+		var order = GetEmptyOrder();
+		var productId = Guid.NewGuid();
+		var lines = new List<OrderLine>
+		{
+			new OrderLine(productId, 5),
+			new OrderLine(productId, 3),
+			new OrderLine(productId, 7),
+		};
+
+		// Act
+		lines.ForEach(order.AddLine);
+
+		// Assert
+		Assert.That(order.OrderLines, Has.Count.EqualTo(1));
+		var line = order.OrderLines[0];
+		Assert.Multiple(() =>
+		{
+			Assert.That(line.ProductId, Is.EqualTo(productId));
+			Assert.That(line.Quantity, Is.EqualTo(15));
+		});
+	}
+
+	private static Order GetEmptyOrder() => new Order(Guid.NewGuid(), GetAddress());
+
 	private static Address GetAddress() => new Address
 	{
 		Name = "John Doe",
