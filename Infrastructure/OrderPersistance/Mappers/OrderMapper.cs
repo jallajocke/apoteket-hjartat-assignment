@@ -16,13 +16,19 @@ public static class OrderMapper
 		};
 	}
 
-	public static Order Map(Infra.Order order)
+	public static Order Map(Infra.Order infraOrder)
 	{
-		return new Order(order.OrderId)
+		var order = new Order(infraOrder.OrderId)
 		{
-			CustomerId = order.CustomerId,
-			DeliveryAddress = AddressMapper.Map(order.DeliveryAddress),
-			OrderLines = order.OrderLines.Select(OrderLineMapper.Map).ToList(),
+			CustomerId = infraOrder.CustomerId,
+			DeliveryAddress = AddressMapper.Map(infraOrder.DeliveryAddress),
 		};
+
+		infraOrder.OrderLines
+			.Select(OrderLineMapper.Map)
+			.ToList()
+			.ForEach(order.AddLine);
+
+		return order;
 	}
 }

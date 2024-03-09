@@ -19,8 +19,9 @@ public class CreateOrderHandler(IOrderRepository orderRepository) : ICreateOrder
 		{
 			CustomerId = command.CustomerId,
 			DeliveryAddress = command.DeliveryAddress,
-			OrderLines = command.OrderLines,
 		};
+
+		command.OrderLines.ForEach(order.AddLine);
 
 		await _orderRepository.CreateOrderAsync(order);
 		return order;
