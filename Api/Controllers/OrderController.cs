@@ -16,6 +16,10 @@ public class OrderController(ICreateOrderHandler createOrderHandler, IGetOrderHa
 	private readonly IGetAllOrdersHandler _getAllOrdersHandler = getAllOrdersHandler;
 	private readonly ICreateOrderHandler _createOrderHandler = createOrderHandler;
 
+	/// <summary>
+	/// Creates a new order
+	/// </summary>
+	/// <response code="201">Returns a newly created order.</response>
 	[HttpPost]
 	[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Order))]
 	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetail))]
