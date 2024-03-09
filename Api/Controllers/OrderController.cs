@@ -14,12 +14,14 @@ public class OrderController(
 	ICreateOrderHandler createOrderHandler,
 	IUpdateOrderHandler updateOrderHandler,
 	IGetOrderHandler getOrderHandler,
-	IGetAllOrdersHandler getAllOrdersHandler) : ControllerBase
+	IGetAllOrdersHandler getAllOrdersHandler,
+	IDeleteOrderHandler deleteOrderHandler) : ControllerBase
 {
 	private readonly ICreateOrderHandler _createOrderHandler = createOrderHandler;
 	private readonly IUpdateOrderHandler _updateOrderHandler = updateOrderHandler;
 	private readonly IGetOrderHandler _getOrderHandler = getOrderHandler;
 	private readonly IGetAllOrdersHandler _getAllOrdersHandler = getAllOrdersHandler;
+	private readonly IDeleteOrderHandler _deleteOrderHandler = deleteOrderHandler;
 
 	/// <summary>
 	/// Creates a new order
@@ -87,5 +89,18 @@ public class OrderController(
 		var orders = result.Select(OrderMapper.Map);
 
 		return Ok(orders);
+	}
+
+	/// <summary>
+	/// Deletes an order if it exists
+	/// </summary>
+	/// <response code="204">Order has been removed.</response>
+	[HttpDelete("{orderId:guid}")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	public async Task<ActionResult> DeleteOrderAsync([FromRoute] Guid orderId)
+	{
+		await _deleteOrderHandler.HandleAsync(orderId);
+
+		return NoContent();
 	}
 }
