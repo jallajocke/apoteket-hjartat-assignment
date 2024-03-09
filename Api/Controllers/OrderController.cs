@@ -1,3 +1,4 @@
+using Api.ErrorHandling;
 using Api.Mappers;
 using Api.Models;
 using Application.Handlers;
@@ -14,6 +15,8 @@ public class OrderController(IGetOrderHandler getOrderHandler, IGetAllOrdersHand
 
 
 	[HttpGet("{orderId:guid}")]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Order))]
+	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetail))]
 	public async Task<ActionResult<Order>> GetOrderAsync([FromRoute] Guid orderId)
 	{
 		var result = await _getOrderHandler.HandleAsync(orderId);
@@ -23,6 +26,7 @@ public class OrderController(IGetOrderHandler getOrderHandler, IGetAllOrdersHand
 	}
 
 	[HttpGet]
+	[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Order>))]
 	public async Task<ActionResult<IEnumerable<Order>>> GetAllOrdersAsync()
 	{
 		var result = await _getAllOrdersHandler.HandleAsync();
