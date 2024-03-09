@@ -1,31 +1,22 @@
 using Api.Mappers;
 using Api.Models;
+using Application.Handlers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class OrderController : ControllerBase
+public class OrderController(IGetAllOrdersHandler getAllOrdersHandler) : ControllerBase
 {
-	[HttpGet]
-	public IEnumerable<Order> GetAllOrders()
-	{
-		var domainOrder = new Domain.Models.Order
-		{
-			OrderId = Guid.NewGuid(),
-			CustomerId = Guid.NewGuid(),
-			DeliveryAddress = new Domain.Models.Address
-			{
-				Name = "1",
-				Street = "2",
-				City = "3",
-				ZipCode = "g",
-			},
-			OrderLines = [new Domain.Models.OrderLine(Guid.NewGuid(), 3)],
-		};
-		var order = OrderMapper.Map(domainOrder);
+	private readonly IGetAllOrdersHandler _getAllOrdersHandler = getAllOrdersHandler;
 
-		return [order];
+	[HttpGet]
+	public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+	{
+		var result = await _getAllOrdersHandler.HandleAsync();
+		var orders = result.Select(OrderMapper.Map);
+
+		return orders;
 	}
 }
