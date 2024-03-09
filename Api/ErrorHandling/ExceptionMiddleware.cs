@@ -42,6 +42,11 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
 				ErrorCode = 404,
 				Message = $"No order exists with id {error.OrderId}",
 			},
+			OrderLineNotFoundException error => new ErrorDetail
+			{
+				ErrorCode = 400,
+				Message = $"No order line exists with product id {error.ProductId}",
+			},
 			_ => new ErrorDetail
 			{
 				ErrorCode = 500,

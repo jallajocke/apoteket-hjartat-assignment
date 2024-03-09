@@ -1,4 +1,6 @@
-﻿namespace Domain.Models;
+﻿using Domain.ErrorHandling;
+
+namespace Domain.Models;
 
 public class Order
 {
@@ -41,7 +43,7 @@ public class Order
 	public void RemoveProducts(Guid productId)
 	{
 		var existingProductLine = _orderLines.SingleOrDefault(l => l.ProductId == productId);
-		if (existingProductLine == null) throw new ArgumentException($"No order line exists with product id: '{productId}'.", nameof(productId));
+		if (existingProductLine == null) throw new OrderLineNotFoundException(productId, $"No order line exists with product id: '{productId}' for order '{OrderId}'.");
 
 		_orderLines.Remove(existingProductLine);
 	}
