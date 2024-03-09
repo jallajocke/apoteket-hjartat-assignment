@@ -1,12 +1,23 @@
 ﻿namespace Domain.Models;
 
-public class Order(Guid customerId, Address deliveryAddress, Guid? orderId = null)
+public class Order
 {
-	public Guid OrderId { get; private set; } = orderId != Guid.Empty ? orderId ?? Guid.NewGuid() : throw new ArgumentException("Guid cannot be empty.", nameof(orderId));
+	public readonly Guid OrderId;
 
-	public readonly Guid CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentException("Guid cannot be empty.", nameof(customerId));
+	public readonly Guid CustomerId;
 
-	public Address DeliveryAddress = deliveryAddress ?? throw new ArgumentNullException(nameof(deliveryAddress));
+	public Address DeliveryAddress { get; private set; }
+
+	public Order(Guid customerId, Address deliveryAddress, Guid? orderId = null)
+	{
+		ArgumentNullException.ThrowIfNull(deliveryAddress);
+		if (customerId == Guid.Empty) throw new ArgumentException("Guid cannot be empty.", nameof(customerId));
+		if (orderId == Guid.Empty) throw new ArgumentException("Guid cannot be empty.", nameof(orderId));
+
+		OrderId = orderId ?? Guid.NewGuid();
+		CustomerId = customerId;
+		DeliveryAddress = deliveryAddress;
+	}
 
 	// invariant: every line's ProductId is unique
 	private readonly List<OrderLine> _orderLines = [];
