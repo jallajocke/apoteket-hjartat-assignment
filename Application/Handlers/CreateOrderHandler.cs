@@ -15,6 +15,15 @@ public class CreateOrderHandler(IOrderRepository orderRepository) : ICreateOrder
 
 	public async Task<Order> HandleAsync(CreateOrderCommand command)
 	{
-		throw new NotImplementedException();
+		var order = new Order
+		{
+			OrderId = Guid.NewGuid(),
+			CustomerId = command.CustomerId,
+			DeliveryAddress = command.DeliveryAddress,
+			OrderLines = command.OrderLines,
+		};
+
+		await _orderRepository.CreateOrderAsync(order);
+		return order;
 	}
 }

@@ -23,6 +23,11 @@ public class OrderRepositoryScaffold : IOrderRepository
 			OrderLines = [new Infra.OrderLine { ProductId = Guid.NewGuid(), Quantity = 3 }],
 		}];
 
+	public async Task CreateOrderAsync(Order order)
+	{
+		_orders.Add(OrderMapper.Map(order));
+	}
+
 	public async Task<List<Order>> GetAllOrdersAsync()
 	{
 		return _orders.Select(OrderMapper.Map).ToList();
