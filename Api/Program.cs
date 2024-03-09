@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IGetAllOrdersHandler, GetAllOrdersHandler>();
 builder.Services.AddTransient<IGetOrderHandler, GetOrderHandler>();
 builder.Services.AddTransient<ICreateOrderHandler, CreateOrderHandler>();
+builder.Services.AddTransient<IUpdateOrderHandler, UpdateOrderHandler>();
 
 builder.Services.AddSingleton<IOrderRepository, OrderRepositoryScaffold>();
 

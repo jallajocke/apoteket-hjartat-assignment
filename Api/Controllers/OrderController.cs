@@ -10,11 +10,12 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class OrderController(ICreateOrderHandler createOrderHandler, IGetOrderHandler getOrderHandler, IGetAllOrdersHandler getAllOrdersHandler) : ControllerBase
+public class OrderController(ICreateOrderHandler createOrderHandler, IUpdateOrderHandler updateOrderHandler, IGetOrderHandler getOrderHandler, IGetAllOrdersHandler getAllOrdersHandler) : ControllerBase
 {
 	private readonly IGetOrderHandler _getOrderHandler = getOrderHandler;
 	private readonly IGetAllOrdersHandler _getAllOrdersHandler = getAllOrdersHandler;
 	private readonly ICreateOrderHandler _createOrderHandler = createOrderHandler;
+	private readonly IUpdateOrderHandler _updateOrderHandler = updateOrderHandler;
 
 	/// <summary>
 	/// Creates a new order
@@ -36,6 +37,30 @@ public class OrderController(ICreateOrderHandler createOrderHandler, IGetOrderHa
 
 		var order = OrderMapper.Map(result);
 		return CreatedAtRoute(nameof(GetOrderAsync), new { order.OrderId }, order);
+	}
+
+	/// <summary>
+	/// Updates an existing order
+	/// </summary>
+	/// <remarks>Removing product ids will be executed before adding new ones.</remarks>
+	/// <response code="204">Order has been updated.</response>
+	[HttpPatch("{orderId:guid}")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetail))]
+	[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetail))]
+	public async Task<ActionResult> UpdateOrderAsync([FromRoute] Guid orderId, [FromBody] UpdateOrderRequest request)
+	{
+		var command = new UpdateOrderCommand
+		{
+			OrderId = orderId,
+			AddOrderLines = request.AddOrderLines?.Select(OrderLineMapper.Map).ToList() ?? [],
+			RemoveProductIds = request.RemoveProductIds ?? [],
+			NewDeliveryAddress = AddressMapper.Map(request.NewDeliveryAddress),
+		};
+
+		await _updateOrderHandler.HandleAsync(command);
+
+		return NoContent();
 	}
 
 
