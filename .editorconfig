@@ -1,0 +1,31 @@
+# Remove the line below if you want to inherit .editorconfig settings from higher directories
+root = true
+
+# C# files
+[*.cs]
+
+#### Core EditorConfig Options ####
+
+# Indentation and spacing
+indent_style = tab
+
+# New line preferences
+end_of_line = crlf
+insert_final_newline = true
+
+# Other
+trim_trailing_whitespace=true
+
+#### .NET Coding Conventions ####
+
+# Organize usings
+dotnet_separate_import_directive_groups = false
+dotnet_sort_system_directives_first = false
+
+# Code-block preferences
+csharp_prefer_braces = true
+csharp_prefer_simple_using_statement = true
+csharp_style_namespace_declarations = file_scoped
+
+# 'using' directive preferences
+csharp_using_directive_placement = outside_namespace
