@@ -8,20 +8,7 @@ namespace Infrastructure.OrderPersistance.Repositories;
 // Note that this is just a scaffold and should NEVER be used in a live environment!
 public class OrderRepositoryScaffold : IOrderRepository
 {
-	private readonly List<Infra.Order> _orders = [
-		new Infra.Order
-		{
-			OrderId = Guid.NewGuid(),
-			CustomerId = Guid.NewGuid(),
-			DeliveryAddress = new Infra.Address
-			{
-				Name = "1",
-				Street = "2",
-				City = "3",
-				ZipCode = "g",
-			},
-			OrderLines = [new Infra.OrderLine { ProductId = Guid.NewGuid(), Quantity = 3 }],
-		}];
+	private readonly List<Infra.Order> _orders = [];
 
 	public async Task CreateOrderAsync(Order order)
 	{
