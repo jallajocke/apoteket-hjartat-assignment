@@ -17,7 +17,6 @@ public class CreateOrderHandler(IOrderRepository orderRepository) : ICreateOrder
 	{
 		var order = new Order
 		{
-			OrderId = Guid.NewGuid(),
 			CustomerId = command.CustomerId,
 			DeliveryAddress = command.DeliveryAddress,
 			OrderLines = command.OrderLines,

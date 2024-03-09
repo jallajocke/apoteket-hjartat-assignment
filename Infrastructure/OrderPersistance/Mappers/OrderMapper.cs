@@ -18,9 +18,8 @@ public static class OrderMapper
 
 	public static Order Map(Infra.Order order)
 	{
-		return new Order
+		return new Order(order.OrderId)
 		{
-			OrderId = order.OrderId,
 			CustomerId = order.CustomerId,
 			DeliveryAddress = AddressMapper.Map(order.DeliveryAddress),
 			OrderLines = order.OrderLines.Select(OrderLineMapper.Map).ToList(),

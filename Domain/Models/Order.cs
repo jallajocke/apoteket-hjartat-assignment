@@ -1,12 +1,12 @@
 ﻿namespace Domain.Models;
 
-public class Order
+public class Order(Guid? orderId = null)
 {
-	public required Guid OrderId { get; set; }
+	public Guid OrderId { get; private set; } = orderId ?? Guid.NewGuid();
 
-	public required Guid CustomerId { get; set; }
+	public required Guid CustomerId { get; init; }
 
-	public required Address DeliveryAddress { get; set; }
+	public required Address DeliveryAddress { get; init; }
 
-	public required List<OrderLine> OrderLines { get; set; }
+	public required List<OrderLine> OrderLines { get; init; }
 }
