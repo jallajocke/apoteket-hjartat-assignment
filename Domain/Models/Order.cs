@@ -6,7 +6,7 @@ public class Order(Guid customerId, Address deliveryAddress, Guid? orderId = nul
 
 	public readonly Guid CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentException("Guid cannot be empty.", nameof(customerId));
 
-	public readonly Address DeliveryAddress = deliveryAddress ?? throw new ArgumentNullException(nameof(deliveryAddress));
+	public Address DeliveryAddress = deliveryAddress ?? throw new ArgumentNullException(nameof(deliveryAddress));
 
 	// invariant: every line's ProductId is unique
 	private readonly List<OrderLine> _orderLines = [];
@@ -25,5 +25,20 @@ public class Order(Guid customerId, Address deliveryAddress, Guid? orderId = nul
 		var quantity = existingProductLine.Quantity + line.Quantity;
 		var newLine = new OrderLine(line.ProductId, quantity);
 		_orderLines.Add(newLine);
+	}
+
+	public void RemoveProducts(Guid productId)
+	{
+		var existingProductLine = _orderLines.SingleOrDefault(l => l.ProductId == productId);
+		if (existingProductLine == null) throw new ArgumentException($"No order line exists with product id: '{productId}'.", nameof(productId));
+
+		_orderLines.Remove(existingProductLine);
+	}
+
+	public void UpdateDeliveryAddress(Address newAddress)
+	{
+		ArgumentNullException.ThrowIfNull(newAddress);
+
+		DeliveryAddress = newAddress;
 	}
 }
