@@ -1,0 +1,277 @@
+{
+	"info": {
+		"_postman_id": "8e8c8c6e-eb3b-4794-8417-d03b3076a8e0",
+		"name": "OrderController",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25489386"
+	},
+	"item": [
+		{
+			"name": "Create Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"pm.test(\"The response contais orderId\", () => {\r",
+							"    // Do not run the next requests if expectation fails\r",
+							"    postman.setNextRequest(null);\r",
+							"\r",
+							"    pm.expect(responseJson.orderId).to.not.be.null;\r",
+							"    // Set order_id for subsequent tests\r",
+							"    pm.collectionVariables.set(\"order_id\", responseJson.orderId);\r",
+							"\r",
+							"    // Run next the requests as usual\r",
+							"    postman.setNextRequest();\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response contais customerId\", () => {\r",
+							"    pm.expect(responseJson.customerId).to.not.be.null;\r",
+							"\tpm.expect(responseJson.customerId).to.equal(pm.collectionVariables.get(\"customer_id\"));\r",
+							"});\r",
+							"\r",
+							"function GetOrderLineByProductId(productId) {\r",
+							"\treturn responseJson.orderLines.find(ol => ol.productId === productId)\r",
+							"}\r",
+							"\r",
+							"pm.test(\"The response contais correct order lines\", () => {\r",
+							"    pm.expect(responseJson.orderLines).to.not.be.null;\r",
+							"    pm.expect(responseJson.orderLines.count()).to.equal(3);\r",
+							"\r",
+							"\tconst lineOrderA = GetOrderLineByProductId(pm.collectionVariables.get(\"product_id_a\"));\r",
+							"\tpm.expect(lineOrderA.quantity).to.equal(3);\r",
+							"\r",
+							"\tconst lineOrderB = GetOrderLineByProductId(pm.collectionVariables.get(\"product_id_b\"));\r",
+							"\tpm.expect(lineOrderB.quantity).to.equal(4);\r",
+							"\r",
+							"\tconst lineOrderC = GetOrderLineByProductId(pm.collectionVariables.get(\"product_id_c\"));\r",
+							"\tpm.expect(lineOrderC.quantity).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response contais correct address\", () => {\r",
+							"    pm.expect(responseJson.deliveryAddress).to.not.be.null;\r",
+							"\r",
+							"\tpm.expect(responseJson.deliveryAddress.name).to.not.be.null;\r",
+							"\tpm.expect(responseJson.deliveryAddress.name).to.equal(pm.collectionVariables.get(\"address_name\"));\r",
+							"\r",
+							"\tpm.expect(responseJson.deliveryAddress.street).to.not.be.null;\r",
+							"\tpm.expect(responseJson.deliveryAddress.street).to.equal(pm.collectionVariables.get(\"address_street\"));\r",
+							"\r",
+							"\tpm.expect(responseJson.deliveryAddress.zipCode).to.not.be.null;\r",
+							"\tpm.expect(responseJson.deliveryAddress.zipCode).to.equal(pm.collectionVariables.get(\"address_zipcode\"));\r",
+							"\r",
+							"\tpm.expect(responseJson.deliveryAddress.city).to.not.be.null;\r",
+							"\tpm.expect(responseJson.deliveryAddress.city).to.equal(pm.collectionVariables.get(\"address_city\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"customerId\": \"{{customer_id}}\",\r\n  \"orderLines\": [\r\n    {\r\n      \"productId\": \"{{product_id_a}}\",\r\n      \"quantity\": 1\r\n    },\r\n    {\r\n      \"productId\": \"{{product_id_a}}\",\r\n      \"quantity\": 2\r\n    },\r\n    {\r\n      \"productId\": \"{{product_id_b}}\",\r\n      \"quantity\": 4\r\n    },\r\n    {\r\n      \"productId\": \"{{product_id_c}}\",\r\n      \"quantity\": 1\r\n    }\r\n  ],\r\n  \"deliveryAddress\": {\r\n    \"name\": \"{{address_name}}\",\r\n    \"street\": \"{{address_street}}\",\r\n    \"zipCode\": \"{{address_zipcode}}\",\r\n    \"city\": \"{{address_city}}\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/order",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order (validate create)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"pm.test(\"The response contais customerId\", () => {\r",
+							"    pm.expect(responseJson.customerId).to.not.be.null;\r",
+							"\tpm.expect(responseJson.customerId).to.equal(pm.collectionVariables.get(\"customer_id\"));\r",
+							"});\r",
+							"\r",
+							"function GetOrderLineByProductId(productId) {\r",
+							"\treturn responseJson.orderLines.find(ol => ol.productId === productId)\r",
+							"}\r",
+							"\r",
+							"pm.test(\"The response contais correct order lines\", () => {\r",
+							"    pm.expect(responseJson.orderLines).to.not.be.null;\r",
+							"    pm.expect(responseJson.orderLines.count()).to.equal(3);\r",
+							"\r",
+							"\tconst lineOrderA = GetOrderLineByProductId(pm.collectionVariables.get(\"product_id_a\"));\r",
+							"\tpm.expect(lineOrderA.quantity).to.equal(3);\r",
+							"\r",
+							"\tconst lineOrderB = GetOrderLineByProductId(pm.collectionVariables.get(\"product_id_b\"));\r",
+							"\tpm.expect(lineOrderB.quantity).to.equal(4);\r",
+							"\r",
+							"\tconst lineOrderC = GetOrderLineByProductId(pm.collectionVariables.get(\"product_id_c\"));\r",
+							"\tpm.expect(lineOrderC.quantity).to.equal(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response contais correct address\", () => {\r",
+							"    pm.expect(responseJson.deliveryAddress).to.not.be.null;\r",
+							"\r",
+							"\tpm.expect(responseJson.deliveryAddress.name).to.not.be.null;\r",
+							"\tpm.expect(responseJson.deliveryAddress.name).to.equal(pm.collectionVariables.get(\"address_name\"));\r",
+							"\r",
+							"\tpm.expect(responseJson.deliveryAddress.street).to.not.be.null;\r",
+							"\tpm.expect(responseJson.deliveryAddress.street).to.equal(pm.collectionVariables.get(\"address_street\"));\r",
+							"\r",
+							"\tpm.expect(responseJson.deliveryAddress.zipCode).to.not.be.null;\r",
+							"\tpm.expect(responseJson.deliveryAddress.zipCode).to.equal(pm.collectionVariables.get(\"address_zipcode\"));\r",
+							"\r",
+							"\tpm.expect(responseJson.deliveryAddress.city).to.not.be.null;\r",
+							"\tpm.expect(responseJson.deliveryAddress.city).to.equal(pm.collectionVariables.get(\"address_city\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/order/{{order_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"order",
+						"{{order_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/order/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"order",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "product_id_a",
+			"value": "30452245-44fc-4060-81a2-df28f7763833",
+			"type": "string"
+		},
+		{
+			"key": "product_id_b",
+			"value": "ab04df19-34eb-4137-8422-9d0f9d9595d2",
+			"type": "string"
+		},
+		{
+			"key": "product_id_c",
+			"value": "2e8ba767-c15c-48d2-a9fd-237b4f22325b",
+			"type": "string"
+		},
+		{
+			"key": "customer_id",
+			"value": "19e9266b-2544-4744-a4d6-1eab73a7858c",
+			"type": "string"
+		},
+		{
+			"key": "address_name",
+			"value": "Jane Doe",
+			"type": "string"
+		},
+		{
+			"key": "address_street",
+			"value": "Cool street 2",
+			"type": "string"
+		},
+		{
+			"key": "address_zipcode",
+			"value": "12345",
+			"type": "string"
+		},
+		{
+			"key": "address_city",
+			"value": "Sometown",
+			"type": "string"
+		},
+		{
+			"key": "order_id",
+			"value": ""
+		},
+		{
+			"key": "base_url",
+			"value": "https://localhost:7222",
+			"type": "string"
+		}
+	]
+}
